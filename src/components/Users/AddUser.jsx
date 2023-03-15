@@ -6,25 +6,31 @@ import ErrorModal from "../UI/ErrorModal";
 import classes from "./AddUser.module.css";
 
 const AddUser = ({ onAddUser }) => {
-  const [enteredUserName, setEnteredUserName] = useState("");
-  const [enteredAge, setEnteredAge] = useState("");
+  // const [enteredUserName, setEnteredUserName] = useState("");
+  // const [enteredAge, setEnteredAge] = useState("");
+  const [{ name, age }, setUser] = useState({
+    name: "",
+    age: "",
+  });
   const [error, setError] = useState(null);
 
   const clearInput = () => {
-    setEnteredUserName("");
-    setEnteredAge("");
+    setUser({
+      name: "",
+      age: "",
+    });
   };
 
   const addUserHandler = (e) => {
     e.preventDefault();
-    if (enteredUserName.trim().length === 0 || enteredAge.trim().length === 0) {
+    if (name.trim().length === 0 || age.trim().length === 0) {
       setError({
         title: "Invalid input",
         message: "Please enter a valid name and age (non-empty values)",
       });
       return;
     }
-    if (+enteredAge < 1) {
+    if (+age < 1) {
       setError({
         title: "Invalid age",
         message: "Please enter a valid age (> 0).",
@@ -32,17 +38,25 @@ const AddUser = ({ onAddUser }) => {
       return;
     }
 
-    onAddUser(enteredUserName, enteredAge);
+    onAddUser(name, age);
     clearInput();
   };
 
-  const usernameChangeHandler = (e) => {
-    setEnteredUserName(e.target.value);
+  const userChangeHandler = (e) => {
+    setUser({
+      name,
+      age,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const ageChangeHandler = (e) => {
-    setEnteredAge(e.target.value);
-  };
+  // const usernameChangeHandler = (e) => {
+  //   setEnteredUserName(e.target.value);
+  // };
+
+  // const ageChangeHandler = (e) => {
+  //   setEnteredAge(e.target.value);
+  // };
 
   const errorHandler = () => {
     setError(null);
@@ -63,15 +77,17 @@ const AddUser = ({ onAddUser }) => {
           <input
             id="username"
             type="text"
-            value={enteredUserName}
-            onChange={usernameChangeHandler}
+            name="name"
+            value={name}
+            onChange={userChangeHandler}
           />
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+            name="age"
+            value={age}
+            onChange={userChangeHandler}
           />
           <Button type="submit">Add User</Button>
         </form>
